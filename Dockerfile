@@ -1,21 +1,16 @@
 # Start your image with a node base image
-FROM node:18-alpine
+FROM ubuntu:noble
 
 # The /app directory should act as the main application directory
-WORKDIR /app
+WORKDIR /opt/posapi3
 
 # Copy the app package and package-lock.json file
-COPY package*.json ./
+COPY PosAPI.deb .
 
-# Copy local directories to the current local directory of our docker image (/app)
-COPY ./src ./src
-COPY ./public ./public
-
+RUN apt-get update
 # Install node packages, install serve, build the app, and remove dependencies at the end
-RUN npm install \
-    && npm install -g serve \
-    && npm run build \
-    && rm -fr node_modules
+RUN chmod +x PosAPI.deb && \
+    apt-get install PosAPI.deb
 
 EXPOSE 3000
 
